@@ -4,7 +4,9 @@
 
 #include <iostream>
 DBManager::DBManager(std::string db_name)
-    : db_instance(NULL), m_db_name(db_name) {
+    : db_instance(NULL)
+    , m_db_name(db_name) {
+    // Intentionally left blank
 }
 
 DBManager::~DBManager() {
@@ -21,7 +23,8 @@ bool DBManager::OpenDB(std::string db_name) {
     m_db_name = db_name;
     int rc = sqlite3_open(m_db_name.c_str(), &db_instance);
     if (rc) {
-        std::cerr << "Can't open database: " << sqlite3_errmsg(db_instance) << std::endl;
+        std::cerr << "Can't open database: " << sqlite3_errmsg(db_instance)
+                  << std::endl;
         return false;
     } else {
         std::cout << "Opened database successfully" << std::endl;
@@ -82,12 +85,14 @@ bool DBManager::InsertAuthor(std::string first_name, std::string last_name) {
 
 bool DBManager::InsertBook(std::string title) {
     // BJC TODO: Sanitize inputs!!!!
-    std::string sql = fmt::format("INSERT INTO Books (TITLE) VALUES({0});", title);
+    std::string sql =
+        fmt::format("INSERT INTO Books (TITLE) VALUES({0});", title);
 
     return sqlite3_exec(db_instance, sql.c_str(), callback, 0, NULL);
 }
 
-bool DBManager::LinkAuthorBook(std::string first_name, std::string last_name, std::string book) {
+bool DBManager::LinkAuthorBook(std::string first_name, std::string last_name,
+                               std::string book) {
     // BJC TODO: Associate Author with Book
     return true;
 }

@@ -1,0 +1,8 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/user/repos/cpp_sqlite'
+g++ -Wall -Werror -g -std=c++17  -I./headers  -I./sources -c sources/DBManager.cpp  -o sources/DBManager.o
+g++ -Wall -Werror -g -std=c++17  -I./headers  -I./sources -c sources/main.cpp  -o sources/main.o
+g++ -Wall -Werror -g -std=c++17  -I./headers  -I./sources -o db_manager sources/DBManager.o sources/main.o -L./libs -lsqlite3
+echo  'db_manager' has been compiled
+make: Leaving directory '/home/user/repos/cpp_sqlite'
+ 
