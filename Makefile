@@ -9,7 +9,7 @@ CC := g++
 RM := rm -rf
 
 # define any compile-time flags
-CFLAGS := -Wall -Werror -g -std=c++11
+CFLAGS := -Wall -Werror -g -std=c++17
 
 # define any directories containing header files other than /usr/include
 #
@@ -21,7 +21,7 @@ LFLAGS := -L./libs
 # This should generate a shared object
 LDFLAGS := -shared
 
-LIBS := -l sqlite3
+LIBS := -lsqlite3
 
 # define the C++ source files
 SRCS := $(wildcard sources/*.cpp)
