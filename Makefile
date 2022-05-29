@@ -9,7 +9,9 @@ CC := g++
 RM := rm -rf
 
 # define any compile-time flags
-CFLAGS := -Wall -Werror -g -std=c++17
+# Uncomment -g for debugging information
+# Uncomment -fPIC for shared library
+CFLAGS := -Wall -Werror -O3 -std=c++17 #-g #-fPIC
 
 # define any directories containing header files other than /usr/include
 #
@@ -19,7 +21,8 @@ INCLUDES := $(foreach d, $(INC), -I$d)
 LFLAGS := -L./libs
 
 # This should generate a shared object
-LDFLAGS := -shared
+# Uncomment -shared for shared libraries
+LDFLAGS := #-shared
 
 LIBS := -lsqlite3
 
@@ -34,10 +37,13 @@ MAIN := db_manager
 .PHONY: depend clean clean_all
 
 all:    $(MAIN)
-	@echo  'db_manager' has been compiled
+	@echo  '$(MAIN)' has been compiled
 
 $(MAIN): $(OBJS)
+	# TODO: If you want to create a normal binary file, use this
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+	# TODO: If you want to create a shared library, use this
+	# $(CC) $(CFLAGS) $(LDFLAGS) $(LIBS) -o $@ $^
 
 .cpp.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
