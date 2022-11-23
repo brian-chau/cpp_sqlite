@@ -1,22 +1,27 @@
-# 'make depend'      uses makedepend to automatically generate dependencies
-#                    (dependencies are added to end of Makefile)
-# 'make'             build executable file 'mycc'
-# 'make clean'       removes all .o files
-# 'make clean all'   removes all .o files and executable file
+# 'make'        build executable file 'exe'
+# 'make clean'  removes all .o and executable files
+#
 
-# define the C++ compiler to use
-CC := g++
-RM := rm -rf
+USE_C = 0
 
-# define any compile-time flags
-# Uncomment -g for debugging information
-# Uncomment -fPIC for shared library
-CFLAGS := -Wall -Werror -O3 -std=c++17 #-g #-fPIC
-
+ifeq ($(USE_C), 1)
+CC = gcc-12
+SRCS = $(wildcard ./sources/*.c)
+OBJS = $(SRCS:.c=.o)
+CFLAGS = -Wall -Werror -O3 -fPIC -g
+.c.o:
+	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
+else
+CC = g++-12
+SRCS = $(wildcard ./sources/*.cpp)
+OBJS = $(SRCS:.cpp=.o)
+CFLAGS = -Wall -Werror -O3 -fPIC -std=c++20 -g
+.cpp.o:
+	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
+endif
 # define any directories containing header files other than /usr/include
 #
-INC := ./headers ./sources ${sort ${dir ${wildcard ./headers/*/ ./sources/*/}}}
-INCLUDES := $(foreach d, $(INC), -I$d)
+INCLUDES = -I./headers
 
 LFLAGS := -L./libs
 
@@ -26,37 +31,18 @@ LDFLAGS := #-shared
 
 LIBS := -lsqlite3
 
-# define the C++ source files
-SRCS := $(wildcard ./sources/*.cpp ./sources/*/*.cpp)
-
-OBJS := $(SRCS:.cpp=.o)
-
 # define the executable file
 MAIN := db_manager
 
 .PHONY: depend clean clean_all
 
 all:    $(MAIN)
-	@echo  '$(MAIN)' has been compiled
+	@echo $(MAIN) has been compiled
 
 $(MAIN): $(OBJS)
-	# TODO: If you want to create a normal binary file, use this
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
-	# TODO: If you want to create a shared library, use this
-	# $(CC) $(CFLAGS) $(LDFLAGS) $(LIBS) -o $@ $^
-
-.cpp.o:
-	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean:
-	$(RM) sources/*.o *~
-	$(RM) $(MAIN).dSYM
+	$(RM) ./sources/*.o *~ $(MAIN)
 
-clean_all:
-	$(RM) sources/*.o *~ $(MAIN)
-	$(RM) $(MAIN).dSYM
 
-depend: $(SRCS)
-	makedepend $(INCLUDES) $^
-
-# DO NOT DELETE THIS LINE -- make depend needs it
